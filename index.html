@@ -59,8 +59,18 @@
       padding: 5px;
       cursor: move;
       font-weight: bold;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      right: 5px;
+      top: 0;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+    }
+    .close-btn:hover {
+      color: #ddd;
     }
     .frame-body {
       padding: 10px;
@@ -130,8 +140,10 @@
       const frame = $('<div class="frame"></div>').attr('id', data.id)
         .css({ top: data.y, left: data.x, width: data.width, height: data.height });
       const header = $('<div class="frame-header" contenteditable="true"></div>').text(data.title);
+      const closeBtn = $('<span class="close-btn">&times;</span>');
       const body = $('<div class="frame-body" contenteditable="true"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
+      header.append(closeBtn);
       frame.append(header, body, resizer);
       $('#framesContainer').append(frame);
 
@@ -155,6 +167,11 @@
         saveFrames();
       });
 
+      closeBtn.on('click', function(e) {
+        e.stopPropagation();
+        removeFrame(frame.attr('id'));
+      });
+
       body.on('blur', function() {
         updateFrameData(frame.attr('id'));
         saveFrames();
@@ -171,6 +188,15 @@
       frames[index].height = div.outerHeight();
       frames[index].title = div.find('.frame-header').text();
       frames[index].content = div.find('.frame-body').html();
+    }
+
+    function removeFrame(id) {
+      const index = frames.findIndex(f => f.id === id);
+      if (index !== -1) {
+        frames.splice(index, 1);
+        $('#' + id).remove();
+        saveFrames();
+      }
     }
 
     function addFrame() {
