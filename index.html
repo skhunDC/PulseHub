@@ -69,6 +69,9 @@
       font-weight: bold;
       color: white;
     }
+    .frame-title {
+      display: inline-block;
+    }
     .close-btn:hover {
       color: #ddd;
     }
@@ -139,16 +142,18 @@
     function createFrame(data) {
       const frame = $('<div class="frame"></div>').attr('id', data.id)
         .css({ top: data.y, left: data.x, width: data.width, height: data.height });
-      const header = $('<div class="frame-header" contenteditable="true"></div>').text(data.title);
+      const header = $('<div class="frame-header"></div>');
+      const title = $('<span class="frame-title" contenteditable="true"></span>').text(data.title);
       const closeBtn = $('<span class="close-btn">&times;</span>');
       const body = $('<div class="frame-body" contenteditable="true"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
-      header.append(closeBtn);
+      header.append(title, closeBtn);
       frame.append(header, body, resizer);
       $('#framesContainer').append(frame);
 
       frame.draggable({
         handle: '.frame-header',
+        cancel: '.frame-title, .close-btn',
         containment: '#framesContainer',
         stop: function() {
           updateFrameData(frame.attr('id'));
@@ -162,7 +167,7 @@
         }
       });
 
-      header.on('blur', function() {
+      title.on('blur', function() {
         updateFrameData(frame.attr('id'));
         saveFrames();
       });
@@ -186,7 +191,7 @@
       frames[index].y = div.position().top;
       frames[index].width = div.outerWidth();
       frames[index].height = div.outerHeight();
-      frames[index].title = div.find('.frame-header').text();
+      frames[index].title = div.find('.frame-title').text();
       frames[index].content = div.find('.frame-body').html();
     }
 
