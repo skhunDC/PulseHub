@@ -104,6 +104,17 @@
     .small-text {
       font-size: 0.9em;
     }
+
+    .frame-toolbar {
+      display: none;
+      padding: 4px;
+      background: #eee;
+      text-align: right;
+    }
+
+    .frame-toolbar button {
+      margin-left: 5px;
+    }
   </style>
 </head>
 <body>
@@ -154,10 +165,13 @@
       const header = $('<div class="frame-header"></div>');
       const title = $('<span class="frame-title" contenteditable="false"></span>').text(data.title);
       const closeBtn = $('<span class="close-btn">&times;</span>');
+      const toolbar = $('<div class="frame-toolbar"></div>');
+      const linkBtn = $('<button type="button" class="add-link-btn">Add Link</button>');
+      toolbar.append(linkBtn);
       const body = $('<div class="frame-body" contenteditable="false"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
       header.append(title, closeBtn);
-      frame.append(header, body, resizer);
+      frame.append(header, toolbar, body, resizer);
       $('#framesContainer').append(frame);
 
       frame.draggable({
@@ -194,26 +208,56 @@
         removeFrame(frame.attr('id'));
       });
 
+      const showToolbar = () => toolbar.show();
+      const hideToolbar = () => toolbar.hide();
+
       body.on('dblclick', function(e) {
         e.stopPropagation();
         const editable = $(this).attr('contenteditable') === 'true';
-        if (editable) {
-          const url = prompt('Enter link URL:');
-          if (url) {
-            const sel = window.getSelection();
-            if (sel.rangeCount > 0 && !sel.isCollapsed) {
-              document.execCommand('createLink', false, url);
-            } else {
-              document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${url}</a>`);
+        if (!editable) {
+          $(this).attr('contenteditable', 'true').focus();
+          showToolbar();
+        }
+      });
+
+      linkBtn.on('click', function(e) {
+        e.stopPropagation();
+        const sel = window.getSelection();
+        const selectedText = sel.rangeCount > 0 ? sel.toString() : '';
+        const dialog = $('<div></div>').append(
+          $('<div style="margin-bottom:8px;"><label>URL: <input type="text" id="dlg-url" style="width:100%"></label></div>'),
+          $('<div><label>Text: <input type="text" id="dlg-text" style="width:100%"></label></div>').find('input').val(selectedText).end()
+        );
+        dialog.dialog({
+          modal: true,
+          title: 'Insert Link',
+          buttons: {
+            Add: function() {
+              const url = dialog.find('#dlg-url').val();
+              const text = dialog.find('#dlg-text').val() || url;
+              if (url) {
+                if (sel.rangeCount > 0 && !sel.isCollapsed) {
+                  document.execCommand('createLink', false, url);
+                  const anchor = sel.anchorNode.parentElement;
+                  $(anchor).attr('target', '_blank').text(text);
+                } else {
+                  document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${text}</a>`);
+                }
+              }
+              $(this).dialog('close');
+              dialog.remove();
+            },
+            Cancel: function() {
+              $(this).dialog('close');
+              dialog.remove();
             }
           }
-        } else {
-          $(this).attr('contenteditable', 'true').focus();
-        }
+        });
       });
 
       body.on('blur', function() {
         $(this).attr('contenteditable', 'false');
+        hideToolbar();
         updateFrameData(frame.attr('id'));
         saveFrames();
       });
