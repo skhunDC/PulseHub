@@ -1,11 +1,33 @@
 # PulseHub
 
-PulseHub is a Google Apps Script web application designed to serve as a central hub for employee resources.
+Google Apps Script web app that puts company resources, real-time info, and quick tools in one place.
 
-The project consists of a simple script (`Code.gs`) and a corresponding `index.html` file served via `HtmlService`. The header displays the company logo along with real-time date, time, and weather information.
+---
 
-Frame titles have been enlarged by 50% and centered within each header for better readability.
+## ✨ Key Features
+- **Live dashboard** — logo, current date/time (updates every second), and current weather.
+- **Drag-and-resize frames** — reposition widgets via header; edges resize.
+- **Quick edit mode** — double-click frame title/body to edit; double-click again to insert hyperlinks.
+- **Accessible typography** — frame titles enlarged 50 % and centered for rapid scanning.
+- **Zero-install front-end** — vanilla HTML/CSS/JS served by Google Apps Script (no build step).
 
-Frames can be dragged from their headers and resized. Double-click a frame's title or body to edit its contents. When the body is already in edit mode, double-clicking again allows you to quickly insert a hyperlink on the selected text or at the cursor.
+---
 
-To deploy, create a new Apps Script project, copy the files from the repository root, and publish as a web app.
+## 📂 Repo Layout
+| Path / File   | Purpose                                   |
+|---------------|-------------------------------------------|
+| `Code.gs`     | Server-side entry point & helper funcs    |
+| `index.html`  | Main UI template (inlines CSS + JS)       |
+| `*.html`      | Optional extra views/partials             |
+| `*.js`        | Optional client scripts (auto-bundled)    |
+| `AGENT.md`    | Dev rules & contribution guide            |
+| `README.txt`  | What you’re reading now                   |
+
+---
+
+## 🚀 Quick Start
+
+1. **Fork / clone**
+   ```bash
+   git clone https://github.com/<you>/pulsehub.git
+   cd pulsehub
