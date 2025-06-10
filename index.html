@@ -65,6 +65,9 @@
       cursor: move;
       font-weight: bold;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .close-btn {
       position: absolute;
@@ -76,6 +79,7 @@
     }
     .frame-title {
       display: inline-block;
+      font-size: 1.5em;
     }
     .close-btn:hover {
       color: #ddd;
@@ -192,7 +196,20 @@
 
       body.on('dblclick', function(e) {
         e.stopPropagation();
-        $(this).attr('contenteditable', 'true').focus();
+        const editable = $(this).attr('contenteditable') === 'true';
+        if (editable) {
+          const url = prompt('Enter link URL:');
+          if (url) {
+            const sel = window.getSelection();
+            if (sel.rangeCount > 0 && !sel.isCollapsed) {
+              document.execCommand('createLink', false, url);
+            } else {
+              document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${url}</a>`);
+            }
+          }
+        } else {
+          $(this).attr('contenteditable', 'true').focus();
+        }
       });
 
       body.on('blur', function() {
