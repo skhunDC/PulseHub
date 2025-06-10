@@ -158,6 +158,7 @@
     setInterval(updateWeather, 600000); // refresh weather every 10 minutes
 
     let frames = [];
+    let savedRange = null;
 
     function createFrame(data) {
       const frame = $('<div class="frame"></div>').attr('id', data.id)
@@ -220,8 +221,20 @@
         }
       });
 
+      body.on('mouseup keyup', function() {
+        const sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+          savedRange = sel.getRangeAt(0).cloneRange();
+        }
+      });
+
       linkBtn.on('click', function(e) {
         e.stopPropagation();
+        if (savedRange) {
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(savedRange);
+        }
         const sel = window.getSelection();
         const selectedText = sel.rangeCount > 0 ? sel.toString() : '';
         const dialog = $('<div></div>').append(
@@ -236,9 +249,12 @@
               const url = dialog.find('#dlg-url').val();
               const text = dialog.find('#dlg-text').val() || url;
               if (url) {
-                if (sel.rangeCount > 0 && !sel.isCollapsed) {
+                const sel2 = window.getSelection();
+                sel2.removeAllRanges();
+                if (savedRange) sel2.addRange(savedRange);
+                if (sel2.rangeCount > 0 && !sel2.isCollapsed) {
                   document.execCommand('createLink', false, url);
-                  const anchor = sel.anchorNode.parentElement;
+                  const anchor = sel2.anchorNode.parentElement;
                   $(anchor).attr('target', '_blank').text(text);
                 } else {
                   document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${text}</a>`);
@@ -246,6 +262,7 @@
               }
               $(this).dialog('close');
               dialog.remove();
+              savedRange = null;
             },
             Cancel: function() {
               $(this).dialog('close');
@@ -257,6 +274,7 @@
 
       body.on('blur', function() {
         $(this).attr('contenteditable', 'false');
+        savedRange = null;
         hideToolbar();
         updateFrameData(frame.attr('id'));
         saveFrames();
