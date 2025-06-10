@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0; /* light grey page background */
+    }
     header {
       display: flex;
       align-items: center;
@@ -45,13 +49,14 @@
     }
     .frame {
       position: absolute;
-      border: 2px solid #B31B34;
+      border: none; /* removed red border */
       background: white;
       width: 200px;
       height: 150px;
       box-sizing: border-box;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3); /* grey shadow backdrop */
     }
     .frame-header {
       background: #add8e6;
