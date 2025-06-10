@@ -7,7 +7,7 @@ Google Apps Script web app that puts company resources, real-time info, and quic
 ## ✨ Key Features
 - **Live dashboard** — logo, current date/time (updates every second), and current weather.
 - **Drag-and-resize frames** — reposition widgets via header; edges resize.
-- **Quick edit mode** — double-click frame title/body to edit; double-click again to insert hyperlinks.
+- **Quick edit mode** — double-click frame title/body to edit, then use toolbar buttons to insert or delete hyperlinks.
 - **Accessible typography** — frame titles enlarged 50 % and centered for rapid scanning.
 - **Zero-install front-end** — vanilla HTML/CSS/JS served by Google Apps Script (no build step).
 
