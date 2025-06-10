@@ -54,8 +54,8 @@
       overflow: hidden;
     }
     .frame-header {
-      background: linear-gradient(to right, #B31B34, #531412, #459652);
-      color: white;
+      background: #add8e6;
+      color: black;
       padding: 5px;
       cursor: move;
       font-weight: bold;
@@ -143,9 +143,9 @@
       const frame = $('<div class="frame"></div>').attr('id', data.id)
         .css({ top: data.y, left: data.x, width: data.width, height: data.height });
       const header = $('<div class="frame-header"></div>');
-      const title = $('<span class="frame-title" contenteditable="true"></span>').text(data.title);
+      const title = $('<span class="frame-title" contenteditable="false"></span>').text(data.title);
       const closeBtn = $('<span class="close-btn">&times;</span>');
-      const body = $('<div class="frame-body" contenteditable="true"></div>').html(data.content);
+      const body = $('<div class="frame-body" contenteditable="false"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
       header.append(title, closeBtn);
       frame.append(header, body, resizer);
@@ -153,7 +153,7 @@
 
       frame.draggable({
         handle: '.frame-header',
-        cancel: '.frame-title, .close-btn',
+        cancel: '.close-btn',
         containment: '#framesContainer',
         stop: function() {
           updateFrameData(frame.attr('id'));
@@ -167,7 +167,15 @@
         }
       });
 
+      title.on('dblclick', function(e) {
+        e.stopPropagation();
+        frame.draggable('disable');
+        $(this).attr('contenteditable', 'true').focus();
+      });
+
       title.on('blur', function() {
+        $(this).attr('contenteditable', 'false');
+        frame.draggable('enable');
         updateFrameData(frame.attr('id'));
         saveFrames();
       });
@@ -177,7 +185,13 @@
         removeFrame(frame.attr('id'));
       });
 
+      body.on('dblclick', function(e) {
+        e.stopPropagation();
+        $(this).attr('contenteditable', 'true').focus();
+      });
+
       body.on('blur', function() {
+        $(this).attr('contenteditable', 'false');
         updateFrameData(frame.attr('id'));
         saveFrames();
       });
