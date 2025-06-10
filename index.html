@@ -167,8 +167,9 @@
       const title = $('<span class="frame-title" contenteditable="false"></span>').text(data.title);
       const closeBtn = $('<span class="close-btn">&times;</span>');
       const toolbar = $('<div class="frame-toolbar"></div>');
-      const linkBtn = $('<button type="button" class="add-link-btn">Add Link</button>');
-      toolbar.append(linkBtn);
+      const insertLinkBtn = $('<button type="button" class="insert-link-btn">Insert Link</button>');
+      const deleteLinkBtn = $('<button type="button" class="delete-link-btn">Delete Link</button>');
+      toolbar.append(insertLinkBtn, deleteLinkBtn);
       const body = $('<div class="frame-body" contenteditable="false"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
       header.append(title, closeBtn);
@@ -228,37 +229,27 @@
         }
       });
 
-      linkBtn.on('click', function(e) {
+      insertLinkBtn.on('click', function(e) {
         e.stopPropagation();
+        const sel = window.getSelection();
         if (savedRange) {
-          const sel = window.getSelection();
           sel.removeAllRanges();
           sel.addRange(savedRange);
         }
-        const sel = window.getSelection();
-        const selectedText = sel.rangeCount > 0 ? sel.toString() : '';
         const dialog = $('<div></div>').append(
-          $('<div style="margin-bottom:8px;"><label>URL: <input type="text" id="dlg-url" style="width:100%"></label></div>'),
-          $('<div><label>Text: <input type="text" id="dlg-text" style="width:100%"></label></div>').find('input').val(selectedText).end()
+          $('<div style="margin-bottom:8px;"><label>Text: <input type="text" id="link-text" style="width:100%"></label></div>'),
+          $('<div><label>URL: <input type="text" id="link-url" style="width:100%"></label></div>')
         );
         dialog.dialog({
           modal: true,
-          title: 'Insert Link',
+          title: 'Add Hyperlink',
           buttons: {
             Add: function() {
-              const url = dialog.find('#dlg-url').val();
-              const text = dialog.find('#dlg-text').val() || url;
+              const text = dialog.find('#link-text').val();
+              const url = dialog.find('#link-url').val();
               if (url) {
-                const sel2 = window.getSelection();
-                sel2.removeAllRanges();
-                if (savedRange) sel2.addRange(savedRange);
-                if (sel2.rangeCount > 0 && !sel2.isCollapsed) {
-                  document.execCommand('createLink', false, url);
-                  const anchor = sel2.anchorNode.parentElement;
-                  $(anchor).attr('target', '_blank').text(text);
-                } else {
-                  document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${text}</a>`);
-                }
+                const linkText = text || url;
+                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${linkText}</a>`);
               }
               $(this).dialog('close');
               dialog.remove();
@@ -270,6 +261,23 @@
             }
           }
         });
+      });
+
+      deleteLinkBtn.on('click', function(e) {
+        e.stopPropagation();
+        const sel = window.getSelection();
+        if (savedRange) {
+          sel.removeAllRanges();
+          sel.addRange(savedRange);
+        }
+        if (sel.rangeCount > 0) {
+          const node = sel.anchorNode;
+          const anchor = $(node).closest('a');
+          if (anchor.length) {
+            anchor.replaceWith(anchor.text());
+          }
+        }
+        savedRange = null;
       });
 
       body.on('blur', function() {
