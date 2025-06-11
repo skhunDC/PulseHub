@@ -1,4 +1,4 @@
-# AGENT.md — PulseHub
+# AGENTS.md — PulseHub
 
 ## Purpose  
 Sets the ground rules for anyone working on **PulseHub**, a Google Apps Script web app that centralizes employee resources and realtime updates.
@@ -11,7 +11,7 @@ Sets the ground rules for anyone working on **PulseHub**, a Google Apps Script w
 | `Code.gs`                 | Server-side logic, HTTP handlers, GAS utilities | Keep public functions first, private helpers below. |
 | `index.html`              | Main UI template | Loads all CSS/JS via `<script>` / `<style>` tags or external files. |
 | `*.html`, `*.js`          | Extra views or client scripts | Place in repo root; GAS bundles automatically. |
-| `README.md`               | High-level project overview | Link out to this AGENT.md. |
+| `README.md`               | High-level project overview | Link out to this AGENTS.md. |
 | `/.github/workflows/*`    | CI (e.g., gas-clasp-action) | Optional but recommended. |
 
 ---

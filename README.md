@@ -20,8 +20,8 @@ Google Apps Script web app that puts company resources, real-time info, and quic
 | `index.html`  | Main UI template (inlines CSS + JS)       |
 | `*.html`      | Optional extra views/partials             |
 | `*.js`        | Optional client scripts (auto-bundled)    |
-| `AGENT.md`    | Dev rules & contribution guide            |
-| `README.txt`  | What you’re reading now                   |
+| `AGENTS.md`   | Dev rules & contribution guide            |
+| `README.md`   | What you’re reading now                   |
 
 ---
 
