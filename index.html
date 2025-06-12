@@ -5,6 +5,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="linkUtils.js"></script>
   <style>
     body {
       margin: 0;
@@ -251,9 +252,8 @@
             Add: function() {
               const text = dialog.find('#link-text').val();
               const url = dialog.find('#link-url').val();
-              if (url) {
-                const linkText = text || url;
-                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${linkText}</a>`);
+              if (url && sel.rangeCount > 0) {
+                insertLinkAtRange(sel.getRangeAt(0), text, url);
               }
               $(this).dialog('close');
               dialog.remove();
@@ -275,11 +275,7 @@
           sel.addRange(savedRange);
         }
         if (sel.rangeCount > 0) {
-          const node = sel.anchorNode;
-          const anchor = $(node).closest('a');
-          if (anchor.length) {
-            anchor.replaceWith(anchor.text());
-          }
+          deleteLinkAtRange(sel.getRangeAt(0));
         }
         savedRange = null;
       });
