@@ -47,5 +47,5 @@ if (location.hostname === 'localhost') {
 ## 4. Modern UI Guidelines
 - Tailwind CSS powers the interface. When running locally the CDN build loads automatically; production uses a pre-compiled stylesheet. Keep custom CSS minimal (only for things like the resizer handle).
 - Write markup mobile-first. Scale up with responsive utilities as needed.
-- Show every user-facing string in English with the Spanish translation underneath in a smaller font.
+- Frames should display English text with the Spanish translation underneath in a smaller font. Date, time and weather appear in English only.
 - The employee dashboard is view-only. Editing frames requires Chrome and a verified developer email.
