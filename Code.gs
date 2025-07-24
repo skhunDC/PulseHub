@@ -10,3 +10,9 @@ function getFrames() {
 function saveFrames(frames) {
   PropertiesService.getScriptProperties().setProperty('frames', JSON.stringify(frames));
 }
+
+function isDevUser() {
+  var allowed = ['skhun@dublincleaners.com', 'ss.sku@protonmail.com'];
+  var email = Session.getActiveUser().getEmail();
+  return allowed.indexOf(email) !== -1;
+}

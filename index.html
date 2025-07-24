@@ -5,124 +5,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <link id="tailwind-build" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/dist/tailwind.min.css" disabled>
+  <script id="tailwind-cdn" src="https://cdn.tailwindcss.com"></script>
   <script>
-function insertLinkAtRange(range, text, url, doc = document) {
-  if (!range || !url) return;
-  const linkText = text || url;
-  const anchor = doc.createElement("a");
-  anchor.href = url;
-  anchor.target = "_blank";
-  anchor.textContent = linkText;
-  range.deleteContents();
-  range.insertNode(anchor);
-}
-
-function deleteLinkAtRange(range, doc = document) {
-  if (!range) return;
-  let node = range.startContainer;
-  if (node.nodeType === 3) node = node.parentNode;
-  const anchor = node.closest("a");
-  if (anchor) {
-    const text = doc.createTextNode(anchor.textContent);
-    anchor.parentNode.replaceChild(text, anchor);
-  }
-}
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = { insertLinkAtRange, deleteLinkAtRange };
-} else {
-  window.insertLinkAtRange = insertLinkAtRange;
-  window.deleteLinkAtRange = deleteLinkAtRange;
-}
+    const isLocal = /localhost|127\.0\.0\.1/.test(location.hostname);
+    if (isLocal) {
+      document.getElementById('tailwind-build').remove();
+    } else {
+      document.getElementById('tailwind-cdn').remove();
+      document.getElementById('tailwind-build').disabled = false;
+    }
   </script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f8f9f9; /* soft off-white background */
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: linear-gradient(to right, #a21f30, #4e4537, #5b8b7e);
-      color: white;
-      position: relative;
-      border-bottom-left-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-    header img {
-      position: absolute;
-      left: 20px;
-      width: 150px;
-      height: auto;
-    }
-    header div {
-      text-align: center;
-    }
-    #add-btn {
-      position: absolute;
-      right: 20px;
-      background: white;
-      color: #B31B34;
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-    #add-btn:hover {
-      background: #f0f0f0;
-    }
-    #framesContainer {
-      position: relative;
-      height: calc(100vh - 120px);
-    }
-    .frame {
-      position: absolute;
-      border: none; /* removed red border */
-      background: white;
-      width: 200px;
-      height: 150px;
-      box-sizing: border-box;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3); /* grey shadow backdrop */
-    }
-    .frame-header {
-      background: linear-gradient(to right, #ccb9af, #5b8b7e);
-      color: #333;
-      padding: 5px;
-      cursor: move;
-      font-weight: bold;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-top-left-radius: 15px;
-      border-top-right-radius: 15px;
-    }
-    .close-btn {
-      position: absolute;
-      right: 5px;
-      top: 0;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
-    }
-    .frame-title {
-      display: inline-block;
-      font-size: 1.5em;
-    }
-    .close-btn:hover {
-      color: #ddd;
-    }
-    .frame-body {
-      padding: 10px;
-      height: calc(100% - 30px);
-      overflow: auto;
-    }
     .resizer {
       width: 15px;
       height: 15px;
@@ -132,43 +26,64 @@ if (typeof module !== "undefined" && module.exports) {
       cursor: se-resize;
       background: #ddd;
     }
-    .subtitle {
-      font-size: 1.2em;
-    }
-    .small-text {
-      font-size: 0.9em;
-    }
-
-    .frame-toolbar {
-      display: none;
-      padding: 4px;
-      background: #eee;
-      text-align: right;
-    }
-
-    .frame-toolbar button {
-      margin-left: 5px;
-    }
   </style>
 </head>
-<body>
-  <header>
-    <img src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
-    <div>
-      <h1>PulseHub</h1>
-      <div class="subtitle">Central hub for team resources and live updates.</div>
-      <div class="small-text" id="datetime">Loading time...</div>
-      <div class="small-text" id="weather">Loading weather...</div>
+<body class="bg-gray-50 font-sans m-0">
+  <header class="relative flex flex-col items-center justify-center p-6 bg-gradient-to-r from-red-800 via-gray-700 to-teal-600 text-white rounded-b-xl">
+    <img class="absolute left-4 w-36" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
+    <div class="text-center">
+      <h1 class="text-2xl font-bold leading-none">PulseHub</h1>
+      <div class="leading-snug">Central hub for team resources and live updates.<br><span class="text-sm">Centro central de recursos del equipo y actualizaciones en vivo.</span></div>
+      <div class="text-sm" id="datetime">Loading time...<br><span class="text-xs">Cargando hora...</span></div>
+      <div class="text-sm" id="weather">Loading weather...<br><span class="text-xs">Cargando clima...</span></div>
     </div>
-    <button id="add-btn">Add</button>
+    <button id="add-btn" class="absolute right-4 bg-white text-red-700 font-bold py-1 px-3 rounded shadow hidden">
+      Add<span class="block text-xs">Agregar</span>
+    </button>
   </header>
 
-  <div id="framesContainer"></div>
+  <div id="framesContainer" class="relative" style="height: calc(100vh - 160px);"></div>
 
   <script>
+    let isDev = false;
+    let frames = [];
+    let savedRange = null;
+
+    function enableDevMode() {
+      $('#add-btn').removeClass('hidden');
+      $('.frame').each(function(){ makeEditable($(this)); });
+    }
+
+    function setDev(status) {
+      isDev = status && /Chrome/.test(navigator.userAgent);
+      if (isDev) enableDevMode();
+    }
+
+    function insertLinkAtRange(range, text, url, doc = document) {
+      if (!range || !url) return;
+      const linkText = text || url;
+      const anchor = doc.createElement('a');
+      anchor.href = url;
+      anchor.target = '_blank';
+      anchor.textContent = linkText;
+      range.deleteContents();
+      range.insertNode(anchor);
+    }
+
+    function deleteLinkAtRange(range, doc = document) {
+      if (!range) return;
+      let node = range.startContainer;
+      if (node.nodeType === 3) node = node.parentNode;
+      const anchor = node.closest('a');
+      if (anchor) {
+        const text = doc.createTextNode(anchor.textContent);
+        anchor.parentNode.replaceChild(text, anchor);
+      }
+    }
+
     function updateDateTime() {
       const now = new Date();
-      document.getElementById('datetime').textContent = now.toLocaleString();
+      document.getElementById('datetime').innerHTML = now.toLocaleString() + '<br><span class="text-xs">' + now.toLocaleString('es-ES') + '</span>';
     }
 
     async function updateWeather() {
@@ -177,50 +92,37 @@ if (typeof module !== "undefined" && module.exports) {
         if (response.ok) {
           const data = await response.json();
           const tempF = data.current_weather.temperature;
-          document.getElementById('weather').textContent = `Weather: ${tempF}\u00B0F`;
+          const textEn = 'Weather: ' + tempF + '\u00B0F';
+          const textEs = 'Clima: ' + tempF + '\u00B0F';
+          document.getElementById('weather').innerHTML = textEn + '<br><span class="text-xs">' + textEs + '</span>';
         } else {
-          document.getElementById('weather').textContent = 'Unable to load weather';
+          document.getElementById('weather').innerHTML = 'Unable to load weather<br><span class="text-xs">No se puede cargar el clima</span>';
         }
       } catch (e) {
-        document.getElementById('weather').textContent = 'Unable to load weather';
+        document.getElementById('weather').innerHTML = 'Unable to load weather<br><span class="text-xs">No se puede cargar el clima</span>';
       }
     }
 
-    updateDateTime();
-    updateWeather();
-    setInterval(updateDateTime, 1000);
-    setInterval(updateWeather, 600000); // refresh weather every 10 minutes
-
-    let frames = [];
-    let savedRange = null;
-
-    function createFrame(data) {
-      const frame = $('<div class="frame"></div>').attr('id', data.id)
-        .css({ top: data.y, left: data.x, width: data.width, height: data.height });
-      const header = $('<div class="frame-header"></div>');
-      const title = $('<span class="frame-title" contenteditable="false"></span>').text(data.title);
-      const closeBtn = $('<span class="close-btn">&times;</span>');
-      const toolbar = $('<div class="frame-toolbar"></div>');
-      const insertLinkBtn = $('<button type="button" class="insert-link-btn">Insert Link</button>');
-      const deleteLinkBtn = $('<button type="button" class="delete-link-btn">Delete Link</button>');
-      toolbar.append(insertLinkBtn, deleteLinkBtn);
-      const body = $('<div class="frame-body" contenteditable="false"></div>').html(data.content);
-      const resizer = $('<div class="resizer"></div>');
-      header.append(title, closeBtn);
-      frame.append(header, toolbar, body, resizer);
-      $('#framesContainer').append(frame);
+    function makeEditable(frame) {
+      const header = frame.find('.frame-header');
+      const body = frame.find('.frame-body');
+      const title = frame.find('.frame-title');
+      const closeBtn = frame.find('.close-btn');
+      const toolbar = frame.find('.frame-toolbar');
+      const insertLinkBtn = frame.find('.insert-link-btn');
+      const deleteLinkBtn = frame.find('.delete-link-btn');
 
       frame.draggable({
         handle: '.frame-header',
         cancel: '.close-btn',
         containment: '#framesContainer',
-        stop: function() {
+        stop() {
           updateFrameData(frame.attr('id'));
           saveFrames();
         }
       }).resizable({
         handles: { 'se': '.resizer' },
-        stop: function() {
+        stop() {
           updateFrameData(frame.attr('id'));
           saveFrames();
         }
@@ -244,8 +146,8 @@ if (typeof module !== "undefined" && module.exports) {
         removeFrame(frame.attr('id'));
       });
 
-      const showToolbar = () => toolbar.show();
-      const hideToolbar = () => toolbar.hide();
+      const showToolbar = () => toolbar.removeClass('hidden');
+      const hideToolbar = () => toolbar.addClass('hidden');
 
       body.on('dblclick', function(e) {
         e.stopPropagation();
@@ -271,12 +173,12 @@ if (typeof module !== "undefined" && module.exports) {
           sel.addRange(savedRange);
         }
         const dialog = $('<div></div>').append(
-          $('<div style="margin-bottom:8px;"><label>Text: <input type="text" id="link-text" style="width:100%"></label></div>'),
-          $('<div><label>URL: <input type="text" id="link-url" style="width:100%"></label></div>')
+          $('<div class="mb-2"><label>Text <span class="text-xs">(Texto)</span>: <input type="text" id="link-text" class="w-full"></label></div>'),
+          $('<div><label>URL: <input type="text" id="link-url" class="w-full"></label></div>')
         );
         dialog.dialog({
           modal: true,
-          title: 'Add Hyperlink',
+          title: 'Add Hyperlink / Agregar hiperv\u00ednculo',
           buttons: {
             Add: function() {
               const text = dialog.find('#link-text').val();
@@ -318,6 +220,25 @@ if (typeof module !== "undefined" && module.exports) {
       });
     }
 
+    function createFrame(data) {
+      const frame = $('<div class="frame bg-white rounded-xl shadow absolute"></div>').attr('id', data.id)
+        .css({ top: data.y, left: data.x, width: data.width, height: data.height });
+      const header = $('<div class="frame-header bg-gradient-to-r from-[#ccb9af] to-[#5b8b7e] text-gray-800 font-bold cursor-move flex items-center justify-center rounded-t-xl relative p-1"></div>');
+      const title = $('<span class="frame-title"></span>').text(data.title);
+      const titleEs = $('<span class="block text-xs"></span>').text(data.titleEs || '');
+      const closeBtn = $('<span class="close-btn absolute right-1 top-0 text-white cursor-pointer">&times;</span>');
+      const toolbar = $('<div class="frame-toolbar hidden bg-gray-100 text-right p-1"></div>');
+      const insertLinkBtn = $('<button type="button" class="insert-link-btn ml-2 bg-gray-200 px-1 rounded">Insert Link<br><span class="text-xs">Agregar enlace</span></button>');
+      const deleteLinkBtn = $('<button type="button" class="delete-link-btn ml-2 bg-gray-200 px-1 rounded">Delete Link<br><span class="text-xs">Eliminar enlace</span></button>');
+      toolbar.append(insertLinkBtn, deleteLinkBtn);
+      const body = $('<div class="frame-body p-2 h-[calc(100%_-_30px)] overflow-auto" contenteditable="false"></div>').html(data.content);
+      const resizer = $('<div class="resizer"></div>');
+      header.append(title, titleEs, closeBtn);
+      frame.append(header, toolbar, body, resizer);
+      $('#framesContainer').append(frame);
+      if (isDev) makeEditable(frame);
+    }
+
     function updateFrameData(id) {
       const div = $('#' + id);
       const index = frames.findIndex(f => f.id === id);
@@ -327,6 +248,7 @@ if (typeof module !== "undefined" && module.exports) {
       frames[index].width = div.outerWidth();
       frames[index].height = div.outerHeight();
       frames[index].title = div.find('.frame-title').text();
+      frames[index].titleEs = div.find('.frame-title').next().text();
       frames[index].content = div.find('.frame-body').html();
     }
 
@@ -341,7 +263,7 @@ if (typeof module !== "undefined" && module.exports) {
 
     function addFrame() {
       const id = 'frame-' + Date.now();
-      const data = { id, title: 'New Frame', content: '', x: 10, y: 10, width: 200, height: 150 };
+      const data = { id, title: 'New Frame', titleEs: 'Nuevo marco', content: '', x: 10, y: 10, width: 200, height: 150 };
       frames.push(data);
       createFrame(data);
       saveFrames();
@@ -359,6 +281,11 @@ if (typeof module !== "undefined" && module.exports) {
     $(document).ready(function() {
       $('#add-btn').on('click', addFrame);
       google.script.run.withSuccessHandler(renderFrames).getFrames();
+      google.script.run.withSuccessHandler(setDev).isDevUser();
+      updateDateTime();
+      updateWeather();
+      setInterval(updateDateTime, 1000);
+      setInterval(updateWeather, 600000);
     });
   </script>
 </body>
