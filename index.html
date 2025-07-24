@@ -7,6 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <link id="tailwind-build" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/dist/tailwind.min.css" disabled>
   <script id="tailwind-cdn" src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script>
     const isLocal = /localhost|127\.0\.0\.1/.test(location.hostname);
     if (isLocal) {
@@ -17,6 +18,7 @@
     }
   </script>
   <style>
+    body { font-family: 'Inter', sans-serif; }
     .resizer {
       width: 15px;
       height: 15px;
@@ -28,19 +30,67 @@
     }
   </style>
 </head>
-<body class="bg-gray-50 font-sans m-0">
-  <header class="relative flex flex-col items-center justify-center p-6 bg-gradient-to-r from-red-800 via-gray-700 to-teal-600 text-white rounded-b-xl">
-    <img class="absolute left-4 w-36" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
-    <div class="text-center">
-      <h1 class="text-2xl font-bold leading-none">PulseHub</h1>
-      <div class="leading-snug">Central hub for team resources and live updates.<br><span class="text-sm">Centro central de recursos del equipo y actualizaciones en vivo.</span></div>
-      <div class="text-sm" id="datetime">Loading time...</div>
-      <div class="text-sm" id="weather">Loading weather...</div>
+<body class="bg-gray-50 m-0">
+  <nav class="sticky top-0 z-10 bg-white shadow flex items-center justify-between px-4 py-2 rounded-b-3xl">
+    <div class="flex items-center gap-2">
+      <img class="w-28" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
     </div>
-    <button id="add-btn" class="absolute right-4 bg-white text-red-700 font-bold py-1 px-3 rounded shadow hidden">
-      Add<span class="block text-xs">Agregar</span>
-    </button>
+    <div class="flex items-center gap-4">
+      <div id="datetime" class="text-sm"></div>
+      <div id="weather" class="text-sm"></div>
+      <button id="add-btn" class="bg-red-600 text-white font-bold px-3 py-1 rounded-full shadow hidden">
+        Add<span class="block text-xs">Agregar</span>
+      </button>
+    </div>
+  </nav>
+
+  <header class="text-center p-6">
+    <h1 class="text-3xl font-bold mb-2">Your Statistic</h1>
+    <div class="flex justify-center gap-2 text-xs">
+      <span class="px-2 py-1 bg-gray-200 rounded-full">Metric A</span>
+      <span class="px-2 py-1 bg-gray-200 rounded-full">Metric B</span>
+      <span class="px-2 py-1 bg-gray-200 rounded-full">Metric C</span>
+    </div>
   </header>
+
+  <section class="grid gap-4 px-6 grid-cols-1 sm:grid-cols-3">
+    <div class="bg-white rounded-3xl shadow p-4 text-center">
+      <div class="text-xl font-bold">--</div>
+      <div class="text-xs text-gray-500">Stat 1</div>
+    </div>
+    <div class="bg-white rounded-3xl shadow p-4 text-center">
+      <div class="text-xl font-bold">--</div>
+      <div class="text-xs text-gray-500">Stat 2</div>
+    </div>
+    <div class="bg-white rounded-3xl shadow p-4 text-center">
+      <div class="text-xl font-bold">--</div>
+      <div class="text-xs text-gray-500">Stat 3</div>
+    </div>
+  </section>
+
+  <main class="grid gap-4 p-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div class="bg-white rounded-3xl shadow p-4">
+      <h2 class="font-bold mb-2">Personal Info</h2>
+    </div>
+    <div class="space-y-4">
+      <div class="bg-white rounded-3xl shadow p-4">
+        <canvas id="gaugeChart" class="w-full h-40"></canvas>
+      </div>
+      <div class="bg-black text-white rounded-3xl shadow p-4">
+        <h2 class="font-bold mb-2">Your Report</h2>
+      </div>
+    </div>
+    <div class="bg-white rounded-3xl shadow p-4">
+      <div class="mb-4">
+        <canvas id="barChart" class="w-full h-40"></canvas>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="px-2 py-1 bg-gray-200 rounded-full text-xs">Macro 1</span>
+        <span class="px-2 py-1 bg-gray-200 rounded-full text-xs">Macro 2</span>
+        <span class="px-2 py-1 bg-gray-200 rounded-full text-xs">Macro 3</span>
+      </div>
+    </div>
+  </main>
 
   <div id="framesContainer" class="relative" style="height: calc(100vh - 160px);"></div>
 
@@ -286,6 +336,31 @@
       setInterval(updateDateTime, 1000);
       setInterval(updateWeather, 600000);
     });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function renderCharts() {
+      const bar = document.getElementById('barChart');
+      if (bar) {
+        new Chart(bar, {
+          type: 'bar',
+          data: {
+            labels: ['Mon','Tue','Wed','Thu','Fri'],
+            datasets: [{ data: [12, 19, 3, 5, 2], backgroundColor: '#6366f1' }]
+          },
+          options: { plugins: { legend: { display: false } }, responsive: true }
+        });
+      }
+      const gauge = document.getElementById('gaugeChart');
+      if (gauge) {
+        new Chart(gauge, {
+          type: 'doughnut',
+          data: { datasets: [{ data: [70, 30], backgroundColor: ['#10b981', '#e5e7eb'], cutout: '80%' }] },
+          options: { rotation: -90, circumference: 180, plugins: { legend: { display: false } } }
+        });
+      }
+    }
+    $(document).ready(renderCharts);
   </script>
 </body>
 </html>
