@@ -40,3 +40,12 @@ if (location.hostname === 'localhost') {
   new EventSource('/esbuild').addEventListener('change', () => location.reload());
 }
 </script>
+```
+
+---
+
+## 4. Modern UI Guidelines
+- Tailwind CSS powers the interface. When running locally the CDN build loads automatically; production uses a pre-compiled stylesheet. Keep custom CSS minimal (only for things like the resizer handle).
+- Write markup mobile-first. Scale up with responsive utilities as needed.
+- Show every user-facing string in English with the Spanish translation underneath in a smaller font.
+- The employee dashboard is view-only. Editing frames requires Chrome and a verified developer email.
