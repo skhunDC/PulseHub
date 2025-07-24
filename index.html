@@ -34,8 +34,8 @@
     <div class="text-center">
       <h1 class="text-2xl font-bold leading-none">PulseHub</h1>
       <div class="leading-snug">Central hub for team resources and live updates.<br><span class="text-sm">Centro central de recursos del equipo y actualizaciones en vivo.</span></div>
-      <div class="text-sm" id="datetime">Loading time...<br><span class="text-xs">Cargando hora...</span></div>
-      <div class="text-sm" id="weather">Loading weather...<br><span class="text-xs">Cargando clima...</span></div>
+      <div class="text-sm" id="datetime">Loading time...</div>
+      <div class="text-sm" id="weather">Loading weather...</div>
     </div>
     <button id="add-btn" class="absolute right-4 bg-white text-red-700 font-bold py-1 px-3 rounded shadow hidden">
       Add<span class="block text-xs">Agregar</span>
@@ -83,7 +83,7 @@
 
     function updateDateTime() {
       const now = new Date();
-      document.getElementById('datetime').innerHTML = now.toLocaleString() + '<br><span class="text-xs">' + now.toLocaleString('es-ES') + '</span>';
+      document.getElementById('datetime').textContent = now.toLocaleString();
     }
 
     async function updateWeather() {
@@ -92,14 +92,13 @@
         if (response.ok) {
           const data = await response.json();
           const tempF = data.current_weather.temperature;
-          const textEn = 'Weather: ' + tempF + '\u00B0F';
-          const textEs = 'Clima: ' + tempF + '\u00B0F';
-          document.getElementById('weather').innerHTML = textEn + '<br><span class="text-xs">' + textEs + '</span>';
+          const text = 'Weather: ' + tempF + '\u00B0F';
+          document.getElementById('weather').textContent = text;
         } else {
-          document.getElementById('weather').innerHTML = 'Unable to load weather<br><span class="text-xs">No se puede cargar el clima</span>';
+          document.getElementById('weather').textContent = 'Unable to load weather';
         }
       } catch (e) {
-        document.getElementById('weather').innerHTML = 'Unable to load weather<br><span class="text-xs">No se puede cargar el clima</span>';
+        document.getElementById('weather').textContent = 'Unable to load weather';
       }
     }
 

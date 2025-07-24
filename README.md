@@ -9,7 +9,7 @@ Google Apps Script web app that puts company resources, real-time info and quick
 - **Drag-and-resize frames** — reposition widgets via header; edges resize.
 - **Quick edit mode** — double-click frame title or body to edit and manage hyperlinks.
 - **Tailwind UI** — modern look driven by Tailwind CSS utilities.
-- **Bilingual labels** — English text followed by Spanish in smaller type.
+- **Bilingual frame labels** — frame headers show Spanish text under the English label. Date, time and weather are English only.
 - **Developer Console** — Chrome-only, OAuth protected for listed emails.
 
 ---
@@ -40,4 +40,4 @@ Google Apps Script web app that puts company resources, real-time info and quick
 3. **Deploy**
    Use [clasp](https://github.com/google/clasp) to push `Code.gs` and `index.html` to Apps Script.
 
-The app loads Tailwind from CDN when run locally and falls back to a pre-built stylesheet in production. All UI text shows English first with the Spanish translation beneath it. Editing frames is restricted to Chrome users whose Google account matches one of the emails in `Code.gs`.
+The app loads Tailwind from CDN when run locally and falls back to a pre-built stylesheet in production. Frame titles display Spanish translations beneath the English text while the date, time and weather appear only in English. Editing frames is restricted to Chrome users whose Google account matches one of the emails in `Code.gs`.
