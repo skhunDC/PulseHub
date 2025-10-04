@@ -91,6 +91,12 @@
       }
     }
 
+    @media (min-width: 1280px) {
+      .summary-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
     .holo-card {
       position: relative;
       padding: 1.75rem;
@@ -170,13 +176,19 @@
     #framesContainer {
       position: relative;
       min-height: 520px;
-      height: clamp(480px, 68vh, 780px);
+      height: clamp(520px, 70vh, 860px);
       border-radius: 1.5rem;
       border: 1px solid rgba(148, 163, 184, 0.35);
       background: linear-gradient(160deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.94) 100%);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 -1px 0 rgba(148, 163, 184, 0.1);
       overflow: hidden;
       backdrop-filter: blur(10px);
+    }
+
+    @media (min-width: 1536px) {
+      #framesContainer {
+        height: clamp(600px, 72vh, 980px);
+      }
     }
 
     #framesContainer::before {
@@ -395,8 +407,8 @@
 </head>
 <body>
   <div class="min-h-screen pb-12">
-    <div class="px-6 pt-6">
-      <div class="max-w-7xl mx-auto space-y-10">
+    <div class="px-6 pt-6 xl:px-10">
+      <div class="mx-auto w-full space-y-10 max-w-screen-2xl 2xl:max-w-[120rem]">
         <header class="header-3d flex flex-col gap-8 p-10 md:flex-row md:items-center md:justify-between text-white">
           <div class="logo-badge">
             <img class="w-32" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
