@@ -17,32 +17,457 @@
     }
   </script>
   <style>
-    .resizer {
-      width: 15px;
-      height: 15px;
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: radial-gradient(120% 120% at 10% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 55%),
+                  radial-gradient(140% 120% at 90% 0%, rgba(244, 114, 182, 0.18) 0%, transparent 60%),
+                  #0f172a;
+      color: #e2e8f0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header-3d {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.75rem;
+      background: linear-gradient(140deg, rgba(51, 65, 85, 0.95) 0%, rgba(17, 94, 89, 0.85) 55%, rgba(220, 38, 38, 0.75) 100%);
+      box-shadow: 0 25px 55px -30px rgba(15, 23, 42, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      isolation: isolate;
+    }
+
+    .header-3d::before,
+    .header-3d::after {
+      content: "";
       position: absolute;
-      right: 0;
-      bottom: 0;
+      inset: -40% -30% auto;
+      height: 85%;
+      filter: blur(60px);
+      transform: rotate(8deg);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .header-3d::before {
+      background: radial-gradient(circle at center, rgba(56, 189, 248, 0.65) 0%, transparent 70%);
+      left: 20%;
+    }
+
+    .header-3d::after {
+      background: radial-gradient(circle at center, rgba(248, 113, 113, 0.5) 0%, transparent 75%);
+      right: 15%;
+    }
+
+    .logo-badge {
+      position: relative;
+      padding: 1.25rem;
+      border-radius: 1.5rem;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.8), rgba(15, 118, 110, 0.45));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 18px 40px -24px rgba(15, 23, 42, 0.85);
+    }
+
+    .logo-badge::after {
+      content: "";
+      position: absolute;
+      inset: 12% 15%;
+      border-radius: 1.1rem;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      pointer-events: none;
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .holo-card {
+      position: relative;
+      padding: 1.75rem;
+      border-radius: 1.5rem;
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 45%, rgba(15, 118, 110, 0.65) 100%);
+      box-shadow: 0 25px 45px -28px rgba(15, 23, 42, 0.95), 0 18px 35px -30px rgba(59, 130, 246, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .holo-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(140% 120% at 80% 0%, rgba(94, 234, 212, 0.35) 0%, transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .holo-card:hover {
+      transform: translate3d(0, -10px, 0) scale(1.01);
+      box-shadow: 0 35px 55px -30px rgba(15, 23, 42, 0.95), 0 20px 40px -28px rgba(14, 165, 233, 0.45);
+      border-color: rgba(226, 232, 240, 0.45);
+    }
+
+    .holo-card h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 240, 0.85);
+    }
+
+    .holo-card h2 span {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 240, 0.6);
+    }
+
+    .holo-card p {
+      margin-top: 1rem;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: rgba(226, 232, 240, 0.92);
+    }
+
+    .holo-card p span {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: rgba(226, 232, 240, 0.7);
+    }
+
+    .stage-shell {
+      position: relative;
+      padding: 1.75rem;
+      border-radius: 2rem;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.85));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 45px 65px -45px rgba(15, 23, 42, 0.95);
+    }
+
+    .stage-shell::before {
+      content: "";
+      position: absolute;
+      inset: 8% 10%;
+      border-radius: 1.5rem;
+      background: radial-gradient(120% 120% at 80% 0%, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+      opacity: 0.6;
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    #framesContainer {
+      position: relative;
+      min-height: 520px;
+      height: clamp(480px, 68vh, 780px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: linear-gradient(160deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.94) 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 -1px 0 rgba(148, 163, 184, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    #framesContainer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .frame {
+      position: absolute;
+      border-radius: 1.25rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: linear-gradient(170deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 41, 59, 0.86) 65%, rgba(13, 148, 136, 0.6) 100%);
+      box-shadow: 0 18px 38px -22px rgba(15, 23, 42, 0.88), 0 12px 24px -18px rgba(56, 189, 248, 0.4);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      color: #e2e8f0;
+    }
+
+    .frame:hover {
+      transform: translate3d(0, -8px, 18px);
+      box-shadow: 0 28px 55px -25px rgba(15, 23, 42, 0.95), 0 18px 40px -20px rgba(14, 165, 233, 0.45);
+      border-color: rgba(226, 232, 240, 0.55);
+    }
+
+    .frame-header {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15rem;
+      padding: 0.85rem 1rem 1rem;
+      border-radius: 1.25rem 1.25rem 0 0;
+      background: linear-gradient(130deg, rgba(59, 130, 246, 0.55) 0%, rgba(34, 197, 94, 0.4) 55%, rgba(248, 113, 113, 0.55) 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      text-align: center;
+    }
+
+    .frame-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .frame-title-es {
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      color: rgba(15, 23, 42, 0.85);
+      text-transform: uppercase;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.65rem;
+      font-size: 1.25rem;
+      color: rgba(15, 23, 42, 0.8);
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.05);
+      color: rgba(15, 23, 42, 1);
+    }
+
+    .frame-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      background: rgba(148, 163, 184, 0.1);
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .frame-toolbar button {
+      font-size: 0.7rem;
+      line-height: 1.25;
+      padding: 0.45rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(226, 232, 240, 0.3);
+      background: linear-gradient(145deg, rgba(226, 232, 240, 0.18), rgba(148, 163, 184, 0.18));
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .frame-toolbar button span {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.65rem;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      color: rgba(226, 232, 240, 0.7);
+    }
+
+    .frame-toolbar button:hover {
+      background: linear-gradient(145deg, rgba(59, 130, 246, 0.45), rgba(56, 189, 248, 0.35));
+      border-color: rgba(226, 232, 240, 0.6);
+    }
+
+    .frame-body {
+      height: calc(100% - 96px);
+      padding: 1rem 1.1rem 1.2rem;
+      overflow-y: auto;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      background: rgba(15, 23, 42, 0.45);
+      border-radius: 0 0 1.2rem 1.2rem;
+      backdrop-filter: blur(6px);
+    }
+
+    .frame-body a {
+      color: #38bdf8;
+      text-decoration: underline;
+      text-decoration-color: rgba(56, 189, 248, 0.6);
+      text-decoration-thickness: 2px;
+    }
+
+    .frame-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .frame-body::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.45);
+      border-radius: 9999px;
+    }
+
+    .frame-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .glass-chip {
+      padding: 0.9rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(226, 232, 240, 0.35);
+      background: rgba(15, 23, 42, 0.35);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      text-align: left;
+    }
+
+    .glass-chip span {
+      font-size: 0.75rem;
+      color: rgba(226, 232, 240, 0.7);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    #add-btn {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      padding: 1.1rem 1.6rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.7);
+      border: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    #add-btn span {
+      font-size: 0.7rem;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+
+    #add-btn:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 24px 45px -22px rgba(249, 115, 22, 0.85);
+    }
+
+    .resizer {
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
       cursor: se-resize;
-      background: #ddd;
+      border-radius: 4px;
+      background: linear-gradient(135deg, rgba(226, 232, 240, 0.45), rgba(148, 163, 184, 0.45));
+      box-shadow: 0 6px 10px -6px rgba(15, 23, 42, 0.85);
+    }
+
+    .stage-heading {
+      text-transform: uppercase;
+      letter-spacing: 0.45em;
+      font-size: 0.8rem;
+      color: rgba(226, 232, 240, 0.7);
+      text-align: center;
+    }
+
+    .stage-heading span {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      color: rgba(226, 232, 240, 0.55);
     }
   </style>
 </head>
-<body class="bg-gray-50 font-sans m-0">
-  <header class="relative flex flex-col items-center justify-center p-6 bg-gradient-to-r from-red-800 via-gray-700 to-teal-600 text-white rounded-b-xl">
-    <img class="absolute left-4 w-36" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
-    <div class="text-center">
-      <h1 class="text-2xl font-bold leading-none">PulseHub</h1>
-      <div class="leading-snug">Central hub for team resources and live updates.<br><span class="text-sm">Centro central de recursos del equipo y actualizaciones en vivo.</span></div>
-      <div class="text-sm" id="datetime">Loading time...</div>
-      <div class="text-sm" id="weather">Loading weather...</div>
-    </div>
-    <button id="add-btn" class="absolute right-4 bg-white text-red-700 font-bold py-1 px-3 rounded shadow hidden">
-      Add<span class="block text-xs">Agregar</span>
-    </button>
-  </header>
+<body>
+  <div class="min-h-screen pb-12">
+    <div class="px-6 pt-6">
+      <div class="max-w-7xl mx-auto space-y-10">
+        <header class="header-3d flex flex-col gap-8 p-10 md:flex-row md:items-center md:justify-between text-white">
+          <div class="logo-badge">
+            <img class="w-32" src="https://www.dublincleaners.com/wp-content/uploads/2025/06/LogosHQ.png" alt="Logo">
+          </div>
+          <div class="flex-1 text-center md:text-left space-y-5">
+            <div class="text-xs uppercase tracking-[0.45em] text-white/70">
+              Unified Operations Hub<br><span class="block text-[0.65rem] tracking-[0.3em] text-white/55">Centro unificado de operaciones</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-black drop-shadow-[0_8px_25px_rgba(15,23,42,0.4)]">PulseHub</h1>
+            <p class="text-lg text-white/85 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+              Central hub for team resources, dynamic dashboards, and live operational updates.<br>
+              <span class="block text-base text-white/70">Centro central para recursos del equipo, tableros dinámicos y actualizaciones operativas en vivo.</span>
+            </p>
+            <div class="grid gap-3 sm:grid-cols-2 max-w-xl mx-auto md:mx-0">
+              <div class="glass-chip">
+                <span>Live Clock</span>
+                <div id="datetime">Loading time...</div>
+              </div>
+              <div class="glass-chip">
+                <span>Weather Now</span>
+                <div id="weather">Loading weather...</div>
+              </div>
+            </div>
+          </div>
+          <button id="add-btn" class="hidden">
+            Add
+            <span>Agregar</span>
+          </button>
+        </header>
 
-  <div id="framesContainer" class="relative" style="height: calc(100vh - 160px);"></div>
+        <section class="summary-grid">
+          <article class="holo-card">
+            <h2>
+              Team Pulse<br><span>Pulso del equipo</span>
+            </h2>
+            <p>
+              Track critical updates across every department at a glance with immersive live panels.<br>
+              <span>Supervise actualizaciones críticas en cada departamento de un vistazo con paneles en vivo envolventes.</span>
+            </p>
+          </article>
+          <article class="holo-card">
+            <h2>
+              Resource Vault<br><span>Bóveda de recursos</span>
+            </h2>
+            <p>
+              Launch tools, documentation, and quick links in one curated 3D canvas for the team.<br>
+              <span>Lanza herramientas, documentación y enlaces rápidos en un lienzo 3D curado para el equipo.</span>
+            </p>
+          </article>
+          <article class="holo-card">
+            <h2>
+              Rhythm & Flow<br><span>Ritmo y flujo</span>
+            </h2>
+            <p>
+              Stay aligned with schedules and milestones through responsive, draggable workspaces.<br>
+              <span>Mantente alineado con horarios y metas mediante espacios de trabajo responsivos y arrastrables.</span>
+            </p>
+          </article>
+        </section>
+
+        <section class="space-y-4">
+          <div class="stage-heading">
+            Dynamic Layout<br><span>Diseño dinámico</span>
+          </div>
+          <div class="stage-shell">
+            <div id="framesContainer" class="relative"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <script>
     let isDev = false;
@@ -106,6 +531,7 @@
       const header = frame.find('.frame-header');
       const body = frame.find('.frame-body');
       const title = frame.find('.frame-title');
+      const titleEs = frame.find('.frame-title-es');
       const closeBtn = frame.find('.close-btn');
       const toolbar = frame.find('.frame-toolbar');
       const insertLinkBtn = frame.find('.insert-link-btn');
@@ -134,6 +560,19 @@
       });
 
       title.on('blur', function() {
+        $(this).attr('contenteditable', 'false');
+        frame.draggable('enable');
+        updateFrameData(frame.attr('id'));
+        saveFrames();
+      });
+
+      titleEs.on('dblclick', function(e) {
+        e.stopPropagation();
+        frame.draggable('disable');
+        $(this).attr('contenteditable', 'true').focus();
+      });
+
+      titleEs.on('blur', function() {
         $(this).attr('contenteditable', 'false');
         frame.draggable('enable');
         updateFrameData(frame.attr('id'));
@@ -220,17 +659,17 @@
     }
 
     function createFrame(data) {
-      const frame = $('<div class="frame bg-white rounded-xl shadow absolute"></div>').attr('id', data.id)
+      const frame = $('<div class="frame"></div>').attr('id', data.id)
         .css({ top: data.y, left: data.x, width: data.width, height: data.height });
-      const header = $('<div class="frame-header bg-gradient-to-r from-[#ccb9af] to-[#5b8b7e] text-gray-800 font-bold cursor-move flex items-center justify-center rounded-t-xl relative p-1"></div>');
+      const header = $('<div class="frame-header cursor-move"></div>');
       const title = $('<span class="frame-title"></span>').text(data.title);
-      const titleEs = $('<span class="block text-xs"></span>').text(data.titleEs || '');
-      const closeBtn = $('<span class="close-btn absolute right-1 top-0 text-white cursor-pointer">&times;</span>');
-      const toolbar = $('<div class="frame-toolbar hidden bg-gray-100 text-right p-1"></div>');
-      const insertLinkBtn = $('<button type="button" class="insert-link-btn ml-2 bg-gray-200 px-1 rounded">Insert Link<br><span class="text-xs">Agregar enlace</span></button>');
-      const deleteLinkBtn = $('<button type="button" class="delete-link-btn ml-2 bg-gray-200 px-1 rounded">Delete Link<br><span class="text-xs">Eliminar enlace</span></button>');
+      const titleEs = $('<span class="frame-title-es"></span>').text(data.titleEs || '');
+      const closeBtn = $('<span class="close-btn">&times;</span>');
+      const toolbar = $('<div class="frame-toolbar hidden"></div>');
+      const insertLinkBtn = $('<button type="button" class="insert-link-btn">Insert Link<br><span>Agregar enlace</span></button>');
+      const deleteLinkBtn = $('<button type="button" class="delete-link-btn">Delete Link<br><span>Eliminar enlace</span></button>');
       toolbar.append(insertLinkBtn, deleteLinkBtn);
-      const body = $('<div class="frame-body p-2 h-[calc(100%_-_30px)] overflow-auto" contenteditable="false"></div>').html(data.content);
+      const body = $('<div class="frame-body" contenteditable="false"></div>').html(data.content);
       const resizer = $('<div class="resizer"></div>');
       header.append(title, titleEs, closeBtn);
       frame.append(header, toolbar, body, resizer);
@@ -247,7 +686,7 @@
       frames[index].width = div.outerWidth();
       frames[index].height = div.outerHeight();
       frames[index].title = div.find('.frame-title').text();
-      frames[index].titleEs = div.find('.frame-title').next().text();
+      frames[index].titleEs = div.find('.frame-title-es').text();
       frames[index].content = div.find('.frame-body').html();
     }
 
